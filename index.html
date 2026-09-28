@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>محمد و نگین</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#FBF5EA; --ivory-deep:#F3E9D8; --wine:#5C1A2E; --wine-deep:#3E1220;
+    --gold:#B8935A; --gold-light:#D9BC8B; --blush:#E3ACA0; --line: rgba(92,26,46,0.28);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: radial-gradient(ellipse at 50% 0%, var(--ivory-deep), var(--ivory) 60%);
+    color:var(--wine-deep); font-family:'Vazirmatn', sans-serif;
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:32px 16px; overflow-x:hidden;
+  }
+  #appRoot{ position:relative; width:100%; max-width:480px; }
+  .petals{ position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:1; }
+  .petal{
+    position:absolute; top:-40px; font-size:16px; opacity:0.8; color:var(--blush);
+    animation-name: fall, sway; animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite; will-change: transform;
+  }
+  @keyframes fall{ from{ transform:translateY(-5vh); } to{ transform:translateY(105vh); } }
+  @keyframes sway{ 0%,100%{ margin-inline-start:0px; } 50%{ margin-inline-start:26px; } }
+  @media (prefers-reduced-motion: reduce){ .petal{ display:none; } }
+  .card{
+    position:relative; z-index:2; background:var(--ivory); border:1px solid var(--line);
+    border-radius:4px; padding:56px 26px 40px; text-align:center; overflow:hidden;
+    box-shadow: 0 30px 60px -30px rgba(60,20,20,0.35);
+    animation: rise 1.1s cubic-bezier(.2,.7,.3,1) both;
+  }
+  @media (prefers-reduced-motion: reduce){ .card{animation:none;} }
+  @keyframes rise{ from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
+  .frame{ position:absolute; inset:12px; border:1px solid var(--line); border-radius:2px; pointer-events:none; }
+  .corner{ position:absolute; width:76px; height:76px; opacity:0.9; }
+  .corner svg{ width:100%; height:100%; display:block; }
+  .corner path, .corner circle{ stroke:var(--gold); fill:none; stroke-width:1.1; }
+  .c-tl{ top:14px; right:14px; transform:scaleX(-1); }
+  .c-tr{ top:14px; left:14px; }
+  .c-bl{ bottom:14px; right:14px; transform:scale(-1,-1); }
+  .c-br{ bottom:14px; left:14px; transform:scaleY(-1); }
+  .eyebrow{ font-size:14px; letter-spacing:0.03em; color:var(--gold); margin:0 0 6px; font-weight:400; }
+  .verse{ font-size:13px; color:var(--wine-deep); opacity:0.65; margin:0 0 22px; font-style:italic; }
+  .names{ font-family:'Noto Nastaliq Urdu', serif; font-size:clamp(40px, 11vw, 56px); line-height:1.85; color:var(--wine); margin:0; font-weight:700; }
+  .amp{ display:block; font-family:'Noto Nastaliq Urdu', serif; font-size:26px; color:var(--gold); margin:2px 0; }
+  .divider{ display:flex; align-items:center; justify-content:center; gap:12px; margin:28px 0 24px; }
+  .divider .stem{ height:1px; width:56px; }
+  .divider .stem.right{ background:linear-gradient(to right, transparent, var(--gold)); }
+  .divider .stem.left{ background:linear-gradient(to left, transparent, var(--gold)); }
+  .divider .bloom{ font-size:16px; }
+  .lead{ font-size:15.5px; line-height:2.05; color:var(--wine-deep); max-width:330px; margin:0 auto 26px; opacity:0.92; }
+  .detail-row{ display:flex; align-items:baseline; justify-content:center; gap:10px; font-size:17px; margin-bottom:14px; }
+  .detail-row .label{ font-size:12.5px; color:var(--gold); min-width:52px; text-align:left; }
+  .detail-row .value{ font-weight:500; color:var(--wine); }
+  .venue{ font-family:'Noto Nastaliq Urdu', serif; font-size:26px; color:var(--wine); margin:2px 0 20px; }
+  .map-btn{
+    display:inline-flex; align-items:center; gap:8px; padding:12px 24px;
+    border:1px solid var(--gold); border-radius:2px; color:var(--wine);
+    text-decoration:none; font-size:14px; letter-spacing:0.01em;
+    transition:background .25s ease, color .25s ease; margin-bottom:8px;
+  }
+  .map-btn:hover{ background:var(--gold); color:var(--ivory); }
+  .map-btn svg{ width:15px; height:15px; }
+  .sec-divider{ display:flex; align-items:center; justify-content:center; gap:10px; margin:34px 0 18px; }
+  .sec-divider .stem{ height:1px; width:40px; background:linear-gradient(to right, transparent, var(--line)); }
+  .sec-divider .stem.left{ background:linear-gradient(to left, transparent, var(--line)); }
+  .sec-divider .dot{ width:5px; height:5px; border-radius:50%; background:var(--gold); }
+  .sec-title{ font-size:16.5px; font-weight:600; color:var(--wine); margin:0 0 4px; }
+  .sec-sub{ font-size:12.5px; color:var(--wine-deep); opacity:0.6; margin:0 0 18px; }
+  .rsvp-form{ display:flex; flex-direction:column; align-items:center; gap:14px; }
+  #guestName{
+    width:100%; max-width:280px; padding:12px 16px; font-family:inherit; font-size:15px;
+    text-align:center; background:transparent; border:none; border-bottom:1.5px solid var(--gold-light);
+    color:var(--wine-deep); outline:none; transition:border-color .2s ease;
+  }
+  #guestMsg{
+    width:100%; max-width:320px; padding:12px 14px; font-family:inherit; font-size:14.5px;
+    text-align:right; background:var(--ivory-deep); border:1px solid var(--line); border-radius:6px;
+    color:var(--wine-deep); outline:none; resize:vertical; min-height:78px; line-height:1.8;
+  }
+  #guestName::placeholder, #guestMsg::placeholder{ color:var(--wine-deep); opacity:0.45; }
+  #guestName:focus{ border-bottom-color:var(--gold); }
+  #guestMsg:focus{ border-color:var(--gold); }
+  .rsvp-btns{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .rsvp-btn{
+    font-family:inherit; font-size:14.5px; padding:12px 20px; border-radius:2px; cursor:pointer;
+    transition:transform .15s ease, background .2s ease, color .2s ease; letter-spacing:0.01em;
+    border-width:1px; border-style:solid;
+  }
+  .rsvp-btn:active{ transform:scale(0.97); }
+  .rsvp-btn.yes{ background:transparent; color:var(--wine); border-color:var(--wine); }
+  .rsvp-btn.yes:hover{ background:rgba(92,26,46,0.06); }
+  .rsvp-btn.yes.selected{ background:var(--wine); color:var(--ivory); }
+  .rsvp-btn.no{ background:transparent; color:var(--wine-deep); border-color:var(--line); }
+  .rsvp-btn.no:hover{ border-color:var(--wine-deep); }
+  .rsvp-btn.no.selected{ background:var(--wine-deep); color:var(--ivory); border-color:var(--wine-deep); }
+  .submit-btn{ background:var(--gold); border-color:var(--gold); color:var(--ivory); margin-top:2px; opacity:0.5; pointer-events:none; }
+  .submit-btn.ready{ opacity:1; pointer-events:auto; }
+  .submit-btn.ready:hover{ background:var(--wine); border-color:var(--wine); }
+  .submit-btn.saving{ opacity:0.6; pointer-events:none; }
+  .rsvp-thanks{ padding:8px 6px 4px; font-size:15px; line-height:1.9; color:var(--wine); animation: rise .5s ease both; }
+  .closing{ margin-top:32px; font-size:13.5px; color:var(--gold); opacity:0.9; }
+  .admin-trigger-wrap{ text-align:center; margin-top:22px; }
+  .admin-trigger{ display:inline-block; padding:10px; font-size:10px; color:var(--wine-deep); opacity:0.18; cursor:pointer; user-select:none; }
+  .admin-trigger:hover{ opacity:0.4; }
+  .admin-panel{ margin-top:14px; padding:16px 14px; border:1px dashed var(--line); border-radius:8px; background:rgba(255,255,255,0.55); text-align:center; }
+  .admin-title{ font-size:12px; color:var(--wine-deep); opacity:0.65; margin:0 0 10px; }
+  .admin-login{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  .admin-login input{
+    padding:9px 12px; font-family:inherit; font-size:13.5px; border:1px solid var(--line);
+    border-radius:6px; background:var(--ivory-deep); color:var(--wine-deep); outline:none; max-width:160px;
+  }
+  .admin-login button{
+    font-family:inherit; font-size:13px; padding:9px 16px; border-radius:6px; cursor:pointer;
+    border:1px solid var(--wine); background:transparent; color:var(--wine);
+  }
+  .admin-login button:hover{ background:var(--wine); color:var(--ivory); }
+  .admin-error{ font-size:11.5px; color:#c0392b; margin-top:8px; }
+  .guest-counts{ display:flex; justify-content:center; gap:22px; margin:4px 0 14px; font-size:13px; color:var(--wine-deep); opacity:0.85; }
+  .guest-counts b{ color:var(--wine); font-size:16px; display:block; }
+  .guest-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; max-height:300px; overflow-y:auto; text-align:right; }
+  .guest-item{ display:flex; align-items:flex-start; gap:9px; padding:11px 13px; background:var(--ivory-deep); border-radius:6px; }
+  .guest-item .badge{ flex-shrink:0; width:8px; height:8px; border-radius:50%; margin-top:6px; }
+  .guest-item .badge.yes{ background:#4a7c59; }
+  .guest-item .badge.no{ background:#b0503f; }
+  .guest-item .g-body{ flex:1; min-width:0; }
+  .guest-item .g-name{ font-weight:600; color:var(--wine); font-size:14px; }
+  .guest-item .g-msg{ font-size:13px; color:var(--wine-deep); opacity:0.8; margin-top:3px; line-height:1.7; }
+  .guest-empty{ font-size:13px; color:var(--wine-deep); opacity:0.55; padding:6px 0; }
+  .admin-logout{ font-size:11px; color:var(--wine-deep); opacity:0.5; margin-top:10px; cursor:pointer; text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<div id="appRoot">
+  <div class="petals" id="petals" aria-hidden="true"></div>
+
+  <div class="card">
+    <div class="frame"></div>
+
+    <div class="corner c-tl"><svg viewBox="0 0 76 76"><path d="M2,74 C2,40 10,10 44,4 M14,74 C14,50 20,26 44,20 M2,60 C18,58 30,50 34,36"/><circle cx="44" cy="4" r="2.3"/><circle cx="44" cy="20" r="1.6"/></svg></div>
+    <div class="corner c-tr"><svg viewBox="0 0 76 76"><path d="M2,74 C2,40 10,10 44,4 M14,74 C14,50 20,26 44,20 M2,60 C18,58 30,50 34,36"/><circle cx="44" cy="4" r="2.3"/><circle cx="44" cy="20" r="1.6"/></svg></div>
+    <div class="corner c-bl"><svg viewBox="0 0 76 76"><path d="M2,74 C2,40 10,10 44,4 M14,74 C14,50 20,26 44,20 M2,60 C18,58 30,50 34,36"/><circle cx="44" cy="4" r="2.3"/><circle cx="44" cy="20" r="1.6"/></svg></div>
+    <div class="corner c-br"><svg viewBox="0 0 76 76"><path d="M2,74 C2,40 10,10 44,4 M14,74 C14,50 20,26 44,20 M2,60 C18,58 30,50 34,36"/><circle cx="44" cy="4" r="2.3"/><circle cx="44" cy="20" r="1.6"/></svg></div>
+
+    <p class="eyebrow">به نام آفریننده‌ی عشق</p>
+    <p class="verse">دو دل، در پناه سرنوشت، به هم رسیدند</p>
+
+    <h1 class="names">محمد<span class="amp">و</span>نگین</h1>
+
+    <div class="divider"><span class="stem right"></span><span class="bloom">🌸</span><span class="stem left"></span></div>
+
+    <p class="lead">در آستانه‌ی سفری تازه و شیرین به نام «زندگی مشترک»<br>حضور گرم شما، این آغاز را برایمان به‌یادماندنی‌تر می‌کند</p>
+
+    <div class="detail-row"><span class="label">تاریخ</span><span class="value">پانزدهم مهر ماه</span></div>
+    <p class="venue">تالار آدرین</p>
+
+    <a class="map-btn" href="https://balad.ir/location?latitude=32.496491&amp;longitude=51.726180&amp;zoom=16.500000" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.2"/></svg>
+      مشاهده مسیر روی نقشه
+    </a>
+
+    <div class="sec-divider"><span class="stem right"></span><span class="dot"></span><span class="stem left"></span></div>
+    <p class="sec-title">افتخار همراهی‌تان را در این شب رویایی به ما می‌دهید؟</p>
+    <p class="sec-sub">پاسخ شما برای ما ثبت می‌شود</p>
+
+    <div id="rsvpForm" class="rsvp-form">
+      <input id="guestName" type="text" placeholder="اسم شما" autocomplete="off">
+      <div class="rsvp-btns">
+        <button type="button" id="btnYes" class="rsvp-btn yes" data-status="yes">بله، با شوق می‌آییم 🎉</button>
+        <button type="button" id="btnNo" class="rsvp-btn no" data-status="no">متاسفانه نمی‌توانیم</button>
+      </div>
+      <textarea id="guestMsg" placeholder="اگر دوست داشتید، پیامی برای محمد و نگین بنویسید (اختیاری)"></textarea>
+      <button type="button" id="btnSubmit" class="rsvp-btn yes submit-btn">ثبت پاسخ</button>
+    </div>
+
+    <div id="rsvpThanks" class="rsvp-thanks" hidden>
+      <p id="thanksMsg"></p>
+    </div>
+
+    <p class="closing">به امید دیدار در شبی سرشار از شادی</p>
+
+    <div class="admin-trigger-wrap">
+      <span class="admin-trigger" id="adminTrigger">•</span>
+    </div>
+
+    <div class="admin-panel" id="adminLoginPanel" hidden>
+      <p class="admin-title">ورود ادمین</p>
+      <div class="admin-login">
+        <input type="password" id="adminPass" placeholder="رمز عبور">
+        <button type="button" id="adminLoginBtn">ورود</button>
+      </div>
+      <p class="admin-error" id="adminError" hidden>رمز اشتباه است</p>
+    </div>
+
+    <div class="admin-panel" id="adminDataPanel" hidden>
+      <p class="admin-title">دفترچه مهمانان</p>
+      <div class="guest-counts" id="guestCounts"></div>
+      <ul class="guest-list" id="guestList"></ul>
+      <p class="admin-logout" id="adminLogout">خروج</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var SUPABASE_URL = 'https://pnkmgpiowbtoqacljdex.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBua21ncGlvd2J0b3FhY2xqZGV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MTQwMzcsImV4cCI6MjEwNjE5MDAzN30.8TtmncWy2QgAecjOs05-rMQtGLiBCD0W6it1kTrkIRc';
+
+  var SUPA_HEADERS = {
+    'apikey': SUPABASE_ANON_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+    'Content-Type': 'application/json'
+  };
+
+  (function initPetals(){
+    var layer = document.getElementById('petals');
+    var glyphs = ['🌸','❀','✿'];
+    var count = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 14;
+    for(var i=0;i<count;i++){
+      var p = document.createElement('span');
+      p.className = 'petal';
+      p.textContent = glyphs[i % glyphs.length];
+      p.style.left = (Math.random()*100) + 'vw';
+      var fallDur = 9 + Math.random()*8;
+      var swayDur = 2.5 + Math.random()*2;
+      p.style.animationDuration = fallDur + 's, ' + swayDur + 's';
+      p.style.animationDelay = (Math.random()*fallDur*-1) + 's, ' + (Math.random()*swayDur*-1) + 's';
+      p.style.fontSize = (12 + Math.random()*10) + 'px';
+      p.style.opacity = (0.45 + Math.random()*0.4).toFixed(2);
+      layer.appendChild(p);
+    }
+  })();
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  var selectedStatus = null;
+
+  function updateSubmitState(){
+    var submitBtn = document.getElementById('btnSubmit');
+    if(submitBtn){
+      if(selectedStatus){ submitBtn.classList.add('ready'); }
+      else{ submitBtn.classList.remove('ready'); }
+    }
+  }
+
+  function selectStatus(status){
+    selectedStatus = status;
+    var y = document.getElementById('btnYes');
+    var n = document.getElementById('btnNo');
+    if(y) y.classList.toggle('selected', status === 'yes');
+    if(n) n.classList.toggle('selected', status === 'no');
+    updateSubmitState();
+  }
+
+  function showThanks(status){
+    document.getElementById('rsvpForm').hidden = true;
+    var thanks = document.getElementById('rsvpThanks');
+    thanks.hidden = false;
+    document.getElementById('thanksMsg').textContent = (status === 'yes')
+      ? 'سپاس از شما؛ حضورتان این شب را برایمان به‌یادماندنی‌تر می‌کند 💛🌸'
+      : 'دلمان برای بودنتان تنگ می‌شود، از اینکه خبر دادید سپاسگزاریم 🌷';
+  }
+
+  function setSaving(isSaving){
+    var btn = document.getElementById('btnSubmit');
+    if(btn) btn.classList.toggle('saving', isSaving);
+  }
+
+  function submitAll(){
+    var input = document.getElementById('guestName');
+    var msgInput = document.getElementById('guestMsg');
+    var name = (input.value || '').trim();
+    if(!name){
+      input.style.borderBottomColor = '#c0392b';
+      input.focus();
+      return;
+    }
+    if(!selectedStatus){ return; }
+
+    var msgText = (msgInput.value || '').trim();
+    var payload = {
+      name: name,
+      status: selectedStatus,
+      message: msgText || null
+    };
+
+    setSaving(true);
+    fetch(SUPABASE_URL + '/rest/v1/rsvps', {
+      method: 'POST',
+      headers: Object.assign({ 'Prefer': 'return=minimal' }, SUPA_HEADERS),
+      body: JSON.stringify(payload)
+    })
+    .then(function(res){
+      if(!res.ok){ throw new Error('submit failed: ' + res.status); }
+      setSaving(false);
+      showThanks(selectedStatus);
+    })
+    .catch(function(err){
+      setSaving(false);
+      console.error(err);
+      alert('ثبت پاسخ با خطا مواجه شد. لطفاً دوباره تلاش کنید.');
+    });
+  }
+
+  var btnYes = document.getElementById('btnYes');
+  var btnNo = document.getElementById('btnNo');
+  if(btnYes) btnYes.addEventListener('click', function(){ selectStatus('yes'); });
+  if(btnNo) btnNo.addEventListener('click', function(){ selectStatus('no'); });
+
+  var guestInput = document.getElementById('guestName');
+  if(guestInput){
+    guestInput.addEventListener('input', function(){ guestInput.style.borderBottomColor = ''; });
+  }
+
+  var btnSubmit = document.getElementById('btnSubmit');
+  if(btnSubmit) btnSubmit.addEventListener('click', submitAll);
+
+  function guestCountsHTML(list){
+    var yes = 0, no = 0;
+    for(var i=0;i<list.length;i++){ if(list[i].status === 'yes'){ yes++; } else { no++; } }
+    return '<span><b>' + yes + '</b>می‌آیند</span><span><b>' + no + '</b>نمی‌آیند</span>';
+  }
+
+  function guestListHTML(list){
+    if(!list.length){
+      return '<li class="guest-empty">هنوز پاسخی ثبت نشده</li>';
+    }
+    var out = '';
+    for(var i=0;i<list.length;i++){
+      var r = list[i];
+      var badge = r.status === 'yes' ? 'yes' : 'no';
+      var msg = r.message ? '<div class="g-msg">' + escapeHtml(r.message) + '</div>' : '';
+      out += '<li class="guest-item"><span class="badge ' + badge + '"></span><div class="g-body"><div class="g-name">' + escapeHtml(r.name) + '</div>' + msg + '</div></li>';
+    }
+    return out;
+  }
+
+  function loadResponses(pass, onDone){
+    fetch(SUPABASE_URL + '/rest/v1/rpc/get_rsvps_admin', {
+      method: 'POST',
+      headers: SUPA_HEADERS,
+      body: JSON.stringify({ pass: pass })
+    })
+    .then(function(res){
+      if(res.status === 400 || res.status === 401 || res.status === 403){
+        throw { unauthorized: true };
+      }
+      return res.json();
+    })
+    .then(function(list){
+      if(!Array.isArray(list)) list = [];
+      document.getElementById('guestCounts').innerHTML = guestCountsHTML(list);
+      document.getElementById('guestList').innerHTML = guestListHTML(list);
+      onDone(true);
+    })
+    .catch(function(err){
+      if(err && err.unauthorized){ onDone(false); }
+      else {
+        document.getElementById('guestList').innerHTML = '<li class="guest-empty">خطا در دریافت اطلاعات</li>';
+        onDone(true);
+      }
+    });
+  }
+
+  var adminTrigger = document.getElementById('adminTrigger');
+  var loginPanel = document.getElementById('adminLoginPanel');
+  var dataPanel = document.getElementById('adminDataPanel');
+
+  if(adminTrigger){
+    adminTrigger.addEventListener('click', function(){
+      loginPanel.hidden = !loginPanel.hidden;
+      dataPanel.hidden = true;
+    });
+  }
+
+  var loginBtn = document.getElementById('adminLoginBtn');
+  if(loginBtn){
+    loginBtn.addEventListener('click', function(){
+      var val = document.getElementById('adminPass').value;
+      var err = document.getElementById('adminError');
+      loadResponses(val, function(ok){
+        if(ok){
+          err.hidden = true;
+          loginPanel.hidden = true;
+          dataPanel.hidden = false;
+        } else {
+          err.hidden = false;
+        }
+      });
+    });
+  }
+
+  var adminPassInput = document.getElementById('adminPass');
+  if(adminPassInput){
+    adminPassInput.addEventListener('keydown', function(e){
+      if(e.key === 'Enter') loginBtn.click();
+    });
+  }
+
+  var logoutLink = document.getElementById('adminLogout');
+  if(logoutLink){
+    logoutLink.addEventListener('click', function(){
+      dataPanel.hidden = true;
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
